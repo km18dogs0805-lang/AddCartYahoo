@@ -13,16 +13,19 @@
         <div class="mb-3">
             <label for="name" class="form-label">タイトル：</label>
             <input type="text" class="form-control" name="name" th:value="${name}" required />
+            
         </div>
         <!-- 価格 -->
         <div class="mb-3">
             <label for="price" class="form-label">価格：</label>
             <input type="text" class="form-control" name="price" th:value="${price}" required />
+            
         </div>
         <!-- 数量 -->
          <div class="mb-3">
             <label for="volume" class="form-label">数量：</label>
             <input type="number" class="form-control" name="volume" th:value="${volume}" required />
+            
          </div>
         <input type="submit" class="btn btn-primary px-4" value="Create" />
         <input type="submit" class="btn btn-primary px-4" value="合計" />
