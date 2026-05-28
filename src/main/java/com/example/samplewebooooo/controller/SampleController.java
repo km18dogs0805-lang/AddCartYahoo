@@ -115,15 +115,24 @@ public class SampleController {
      */
     @GetMapping("/findresult")
     public ModelAndView findResult(ModelAndView mav
-                                   
                                   ) {
         
         // findresult.htmlを表示
         mav.setViewName("findresult");
+        
+        
 
         // データベースから全データを取得
         List<Item> list = repository.findAll();
+        
+        if (list.isEmpty()) {
+            // データが存在しない場合はエラーメッセージを表示
+            mav.addObject("message", "データが見つかりませんでした");
 
+        } else {
+            // データが存在する場合はタイトルを表示
+            mav.addObject("message", "削除するデータを選択してください");
+        }
         // dataに、全データを表示
         mav.addObject("items", list);
 

@@ -16,6 +16,8 @@
 
         <h1>在庫リスト</h1>
 
+        <p th:text="${message}"></p>
+
         <!-- 検索フォーム -->
         <form action="/findresult" method="get">
             
@@ -56,13 +58,13 @@
                 </tr>
             </thead>
 
-            <!-- テーブルの内容 -->
+            <!-- テーブルの内容 ※送信元リストのプロパティ名とリストの長さを一致させること！ -->
             <tbody>
                 <tr th:each="item : ${items}">
-                    <td th:text="${item.id}">1</td>
-                    <td th:text="${item.title}">商品A</td>
-                    <td th:text="${item.price}">1000</td>
-                    <td th:text="${item.quantity}">10</td>
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.name}"></td>
+                    <td th:text="${item.price}"></td>
+                    <td th:text="${item.volume}"></td>
                 </tr>
             </tbody>
 
