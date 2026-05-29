@@ -38,12 +38,6 @@
     
     <form method="post" action="result" th:object="${formModel}">
         
-        <ul>
-            <li th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></li>
-            <li th:if="${#fields.hasErrors('price')}" class="text-danger" th:errors="*{price}"></li>
-            <li th:if="${#fields.hasErrors('volume')}" class="text-danger" th:errors="*{volume}"></li>
-        </ul>
-        
         <!-- コンテンツのタイトル -->
         <div class="mb-3">
             <label for="name" class="form-label">タイトル：</label>

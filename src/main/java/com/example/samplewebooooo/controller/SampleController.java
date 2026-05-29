@@ -124,61 +124,61 @@ public class SampleController {
         ModelAndView res = null;
 
         List<Item> list = null;
-
+        
         System.out.println("削除確認の画面を表示する" + bindingResult.getFieldError());
-
+        
+        // バリデーションエラーがない場合は、削除確認の画面を表示する
         if (!bindingResult.hasErrors()) {
 
             mav.setViewName("findresult");
 
-            // バリデーションエラーがある場合は、エラーメッセージを表示してmain.htmlに戻る
-            //repository.saveAndFlush(item);
-
             // データベースから全データを取得
-            list = repository.findAll();
+            list = dao.getAll();
 
+            /*
+            * リスト内が空かどうかを確認             * もし空であれば、データが存在しないことを意味する
+             * その場合は、エラーメッセージを表示してmain.htmlに戻る
+             * そうでなければ、削除確認の画面を表示する
+            */ 
             if (list.isEmpty()) {
 
                 // データが存在しない場合はエラーメッセージを表示
-                mav.addObject("message", "データが見つかりませんでした");
+                //mav.addObject("message", "データが見つかりませんでした");
 
-                } else {
-
-                    // データが存在する場合はタイトルを表示
-                    mav.addObject("message", "削除するデータを選択してください");
-                }
+                // main.htmlを表示（※「/」は、ルートパスをmain.htmlに設定しているため）
+                res = new ModelAndView("redirect:/");
                 
-                res = mav;
-
+                //res.addObject("message", "データが見つかりませんでした");
             } else {
+                
+                /**
+                 *  正常にデータが存在する場合は、削除確認の画面を表示する
+                 */
+                
+                // データが存在する場合はタイトルを表示
+                mav.addObject("message", "検索するデータを選択してください");
 
-                repository.saveAndFlush(item);
+                // findresult.htmlを表示
+                res = new ModelAndView("findresult");
 
-                Iterable<Item> items = repository.findAll();
-                mav.addObject("items", items);
-
-                res = mav;
+                //repository.saveAndFlush(item);
+                
+                // findresult.htmlのdataに、全データを表示
+                res.addObject("data", list);
             }
+        
+        } else {
 
-            res = mav;
+            // バリデーションエラーがある場合は、エラーメッセージを表示してmain.htmlに戻る
+            mav.setViewName("main");
+
+            res = new ModelAndView("main");
+            //mav.addObject("message", "入力に誤りがあります");
+
         }
-                                    
-        // findresult.htmlを表示
-        //mav.setViewName("findresult");
-        
-        
-        // if (list.isEmpty()) {
-        //     // データが存在しない場合はエラーメッセージを表示
-        //     mav.addObject("message", "データが見つかりませんでした");
-
-        // } else {
-        //     // データが存在する場合はタイトルを表示
-        //     mav.addObject("message", "削除するデータを選択してください");
-        // }
-        // dataに、全データを表示
-        //mav.addObject("items", list);
 
         return res;
+
     }
 
     /*
