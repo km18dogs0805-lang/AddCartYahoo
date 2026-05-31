@@ -110,12 +110,12 @@ public class SampleController {
     }
 
     /**
-     * getResultName: 削除確認の画面を表示する
+     * getResultName: 検索確認の画面を表示する
      * @param id
      * @param mav
      * @return
      */
-    @PostMapping("/findresult")
+    @GetMapping("/findresult")
     public ModelAndView findResult(ModelAndView mav,
                                    HttpServletRequest request,
                                    @ModelAttribute("formModel") @Validated Item item,
@@ -148,10 +148,10 @@ public class SampleController {
             if (list.isEmpty() || list == null) {
 
                 // データが存在しない場合はエラーメッセージを表示
-                //mav.addObject("message", "データが見つかりませんでした");
+                mav.addObject("msg", "データが見つかりませんでした");
                 System.out.println("データが見つかりませんでした");
                 // main.htmlを表示（※「/」は、ルートパスをmain.htmlに設定しているため）
-                res = new ModelAndView("redirect:/");
+                res = new ModelAndView("main");
                 
                 //res.addObject("message", "データが見つかりませんでした");
             } else {
@@ -161,7 +161,7 @@ public class SampleController {
                  */
                 
                 // データが存在する場合はタイトルを表示
-                mav.addObject("message", "検索するデータを選択してください");
+                mav.addObject("msg", "検索するデータを選択してください");
 
                 // findresult.htmlを表示
                 res = new ModelAndView("findresult");
@@ -233,19 +233,15 @@ public class SampleController {
      * @param mav
      * @return
      */
-    @RequestMapping(value = "/findresult/{find_str}", method = RequestMethod.POST)
-    public ModelAndView findResult(HttpServletRequest request, 
-                                   @PathVariable String find_str,
-                                   ModelAndView mav) {
+    @RequestMapping(value = "/findresult", method = RequestMethod.POST)
+    public ModelAndView searchItems(HttpServletRequest request, 
+                                    ModelAndView mav) {
+
+        // findresult.htmlを表示
+        mav.setViewName("findresult");
         
         // フォームから送信されたリクエストパラメーターを取得
         String param = request.getParameter("find_str");
-        
-        // find_result.htmlを表示
-        mav.setViewName("find_result");
-
-        // タイトルを表示
-        mav.addObject("title", "検索結果");
         
         // 入力値がなければ、エラーメッセージを表示してfindresult.htmlに戻る
         if (param == "") {
@@ -258,9 +254,6 @@ public class SampleController {
 
         } else {
 
-            // 入力値がある場合は、検索結果を表示するためのfind_result.htmlを表示する
-            mav.setViewName("find_result");
-
             // タイトルを表示
             mav.addObject("title", "在庫リストの検索結果");
 
@@ -271,7 +264,7 @@ public class SampleController {
             List<Item> list = dao.find(param);
 
             // 検索結果を表示
-            mav.addObject("data", list);
+            mav.addObject("items", list);
 
         }
         

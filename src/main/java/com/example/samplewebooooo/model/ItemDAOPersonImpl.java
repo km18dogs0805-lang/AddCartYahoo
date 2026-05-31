@@ -100,18 +100,20 @@ public class ItemDAOPersonImpl implements ItemDAO<Item> {
         List<Item> list = null;
         
         // クエリ文を作成し、変数に格納（fstrをパラメータとして渡す）
-        String qstr = "from Item where id = :fid or name = :fname";
-
+        String qstr = "from Item where id = :fid or name like :fname";
+        System.out.println("クエリ文: " + qstr);
         Long fid = 0L;
         // idをLong型に変換し、できなければ例外をキャッチする
         try { 
 
             fid = Long.parseLong(fstr);
+            System.out.println("fidは～～～～: " + fid);
 
         } catch (NumberFormatException e) { 
 
             // 例外が発生した場合は、fidを0にする
             e.printStackTrace();
+            System.out.println("fidは～～～～: " + fid);
 
         }
 
