@@ -345,4 +345,11 @@ public class SampleController {
 
     }
 
+    // キーワード検索
+    @RequestMapping("path", method=RequestMethod.GET)
+    public String requestMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
+
 }
