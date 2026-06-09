@@ -8,19 +8,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import reactor.core.publisher.Mono;
+
 @Service
 public class yahooService {
 
     // ✅ @Value の値はコンストラクタ実行後に注入されるため、
     //    フィールド宣言時には使わない
     @Value("${yahoo.api.base-url}")
-    private URI baseUrl;
+    private String baseUrl;
 
     /**
      * 商品のカテゴリーリスト
      */
     
-
     @Value("${yahoo.api.client-id}")
     private String appId;
 
@@ -75,6 +76,7 @@ public class yahooService {
             .replace("\"", "&quot;")
             .replace("'", "&#039;");
     }
+    
 
 
 }

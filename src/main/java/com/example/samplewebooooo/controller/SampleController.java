@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.result.view.Rendering;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,6 +24,7 @@ import com.example.samplewebooooo.model.ItemDAOPersonImpl;
 import com.example.samplewebooooo.repositories.ItemRepository;
 
 import com.example.samplewebooooo.service.yahooService;
+import com.example.samplewebooooo.service.yahooServiseWeb;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -32,12 +35,18 @@ import tools.jackson.databind.JsonNode;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.reactive.function.client.WebClient;
 /* 
 *  SampleController: コントローラークラス
 */
 @Controller
 public class SampleController {
+
+    @Value("${yahoo.api.base-url}")
+    private String baseUrl;
+
+    @Value("${yahoo.api.client-id}")
+    private String applicationId;
 
     // データが格納されたリポジトリ
     @Autowired
@@ -47,7 +56,13 @@ public class SampleController {
     @Autowired
     ItemDAOPersonImpl dao;
 
-      
+    //private final WebClient webClient;
+
+    // public SampleController(WebClient.Builder builder) {
+    //     super();
+    //     webClient = builder.baseUrl(baseUrl + "?" + applicationId).build();
+    // }
+
     /* 
     *   mainDisplay: メイン画面を表示する
     */
@@ -322,12 +337,6 @@ public class SampleController {
      * @param mav
      * @return
      */
-    @Value("${yahoo.api.base-url}")
-    private String baseUrl;
-
-    @Value("${yahoo.api.client-id}")
-    private String applicationId;
-
 
     @RequestMapping(value = "/rakuten", method = RequestMethod.GET)
     public ModelAndView searchRakuten(ModelAndView mav) {
@@ -344,12 +353,17 @@ public class SampleController {
         return mav;
 
     }
+    @Autowired
+    yahooServiseWeb yWeb;
 
-    // キーワード検索
-    @RequestMapping("path", method=RequestMethod.GET)
-    public String requestMethodName(@RequestParam String param) {
-        return new String();
+    @RequestMapping(value="/rakuten/search", method=RequestMethod.POST)
+    public ModelAndView searchYahoo(@RequestParam String keyword,
+                                    ModelAndView mav) {
+        mav.setViewName("rakuten");
+        //String result = yWeb.searchItem(keyword).block();
+        //System.out.println(result);
+        //mav.addObject("result", result);
+        return mav;
     }
     
-
 }
