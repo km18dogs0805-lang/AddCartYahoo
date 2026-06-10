@@ -1,79 +1,76 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Rakuten_Page</title>
+    <title>Yahoo ショッピング検索</title>
 </head>
 <body class="container">
     <header id="header">
         <div class="header_container">
-            <h1>楽天で検索</h1>
-            <div class="humburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <h1>Yahoo ショッピングで検索</h1>
             <nav>
-                <ul class="nav_list">
+                <ul class="nav_list d-flex gap-3 list-unstyled mt-2">
                     <li><a href="/">Myページ</a></li>
                     <li><a href="/findresult">検索する</a></li>
-                    <li><a href="/rakuten">楽天で検索</a></li>
+                    <li><a href="/rakuten">Yahoo で検索</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- ✅ action削除・JS側でsubmitを制御 -->
-    <form method="post" id="searchForm" class="mb-4" th:action="@{/rakuten/search}">
+    <!-- 検索フォーム -->
+    <form method="post" th:action="@{/rakuten/search}" class="mb-4 mt-3">
         <div class="input-group input-group-lg">
             <input
                 type="text"
                 class="form-control"
-                id="keyword"
                 name="keyword"
+                th:value="${keyword}"
                 placeholder="商品名を入力（例：コーヒー、ノート）"
                 required
             />
-            <button class="btn btn-danger text-white px-4" id="kensaku" type="submit">
+            <button class="btn btn-danger text-white px-4" type="submit">
                 🔍 検索
             </button>
         </div>
     </form>
 
-    <!-- ローディング表示 -->
-    <div id="loading" class="text-center my-3 d-none">
-        <div class="spinner-border text-danger" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+    <!-- エラーメッセージ -->
+    <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+
+    <!-- 件数なしメッセージ -->
+    <div th:if="${msg}" class="alert alert-warning" th:text="${msg}"></div>
+
+    <!-- 検索結果テーブル -->
+    <div th:if="${items != null and !#lists.isEmpty(items)}">
+        <p class="text-muted">
+            「<strong th:text="${keyword}"></strong>」の検索結果：
+            <span th:text="${#lists.size(items)}"></span> 件
+        </p>
+        <table class="table table-striped mt-2">
+            <thead class="table-danger">
+                <tr>
+                    <th>商品名</th>
+                    <th>価格（円）</th>
+                    <th>リンク</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${items}">
+                    <td th:text="${item['name']}"></td>
+                    <td th:text="${#numbers.formatInteger(item['price'], 1, 'COMMA')} + ' 円'"></td>
+                    <td>
+                        <a th:href="${item['url']}" target="_blank" class="btn btn-sm btn-outline-danger">
+                            商品を見る
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <!-- エラー表示 -->
-    <div id="errorMsg" class="alert alert-danger d-none"></div>
-
-    <table class="table table-striped mt-4">
-        <thead>
-            <tr>
-                <th>商品名</th>
-                <th>価格</th>
-                <th>URL</th>
-            </tr>
-        </thead>
-        <tbody id="resultsBody">
-            <!-- 検索結果がここに挿入される -->
-             <td th:text="${result}"></td>
-        </tbody>
-    </table>
-
-    <script>
-        // ハンバーガーメニュー
-        document.querySelector('.humburger').addEventListener('click', function () {
-            this.classList.toggle('active');
-            document.querySelector('.nav_list').classList.toggle('active');
-        });
-
-       
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
