@@ -44,6 +44,7 @@
     <div th:if="${msg}" class="alert alert-warning" th:text="${msg}"></div>
 
     <!-- 検索結果テーブル -->
+     <!-- th:object の範囲内のため、＄ではなく＃ -->
     <div th:if="${items != null and !#lists.isEmpty(items)}">
         <p class="text-muted">
             「<strong th:text="${keyword}"></strong>」の検索結果：

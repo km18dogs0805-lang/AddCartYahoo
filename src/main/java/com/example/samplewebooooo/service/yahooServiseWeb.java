@@ -48,20 +48,23 @@ public class yahooServiseWeb {
         System.out.println("Yahoo API リクエストURL: " + url);
 
         // API レスポンス全体を Map として受け取る
-        Map<String, Object> response = webClient
-                .get()
+        Map<String, Object> response = webClient.get()
                 .uri(url)
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
 
+        // Mapに格納したデータ（レスポンスされた結果）
         List<Map<String, String>> items = new ArrayList<>();
+
+        // 検索結果が無い場合は、空を表示
         if (response == null) return items;
 
-        // V3 の hits は Map ではなく直接 List（配列）
+        // V3 の hits は Map ではなく直接 List（配列） Map<キーの型, 値の型>
         List<Map<String, Object>> hitList = (List<Map<String, Object>>) response.get("hits");
         if (hitList == null) return items;
 
+        // JSONから得た値を、String型に変換する（※Null値でも例外を発生させない）
         for (Map<String, Object> hit : hitList) {
             String name  = String.valueOf(hit.getOrDefault("name",  "（名称不明）"));
             String price = String.valueOf(hit.getOrDefault("price", "0"));
