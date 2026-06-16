@@ -47,8 +47,13 @@ public class ItemController {
 
     @RequestMapping("/")
     public ModelAndView mainDisplay(ModelAndView mav) {
+
+        // main.htmlをセット
         mav.setViewName("main");
+
+        // dataに、リポジトリに登録したItemクラスのデータをすべて表示
         mav.addObject("data", repository.findAll());
+
         return mav;
     }
 
@@ -60,11 +65,18 @@ public class ItemController {
     @Transactional
     public ModelAndView resultDisplay(@ModelAttribute("formModel") Item item,
                                       ModelAndView mav) {
+        
         repository.saveAndFlush(item);
-
+        
+        // result.htmlをセット
         mav.setViewName("result");
+
+        // 更新された旨を表示
         mav.addObject("title", "更新しました");
+
+        // リポジトリの内容をすべて表示
         mav.addObject("data", repository.findAll());
+        
         return mav;
     }
 

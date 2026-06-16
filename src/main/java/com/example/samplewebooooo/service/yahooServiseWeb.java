@@ -32,7 +32,7 @@ public class yahooServiseWeb {
      *         ?appid={client-id}&query={keyword}&results=20
      *
      * @param keyword 検索キーワード
-     * @return 商品情報 (name, price, url) のリスト
+     * @return items 商品情報 (name, price, url) のリスト
      */
     @SuppressWarnings("unchecked")
     public List<Map<String, String>> searchItem(String keyword) {
