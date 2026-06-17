@@ -52,7 +52,7 @@ public class ItemController {
         mav.setViewName("main");
 
         // dataに、リポジトリに登録したItemクラスのデータをすべて表示
-        mav.addObject("data", repository.findAll());
+        mav.addObject("data", dao.getAll());
 
         return mav;
     }
@@ -65,8 +65,10 @@ public class ItemController {
     @Transactional
     public ModelAndView resultDisplay(@ModelAttribute("formModel") Item item,
                                       ModelAndView mav) {
-        
+        // Entityを永続化
         repository.saveAndFlush(item);
+
+        List<Item> list = dao.getAll();
         
         // result.htmlをセット
         mav.setViewName("result");
@@ -75,7 +77,7 @@ public class ItemController {
         mav.addObject("title", "更新しました");
 
         // リポジトリの内容をすべて表示
-        mav.addObject("data", repository.findAll());
+        mav.addObject("data", list);
         
         return mav;
     }
@@ -83,10 +85,13 @@ public class ItemController {
     @PostMapping("/main")
     public ModelAndView postMethodName(@ModelAttribute("formModel") Item item,
                                        ModelAndView mav) {
+        // データベースの中身をリストへ格納
         List<Item> list = dao.getAll();
-        System.out.println("最後の値は・・・" + list);
 
+        // main.htmlをセット
         mav.setViewName("main");
+
+        // データベースの中身を出力
         mav.addObject("data", list);
         return mav;
     }
@@ -102,41 +107,71 @@ public class ItemController {
                                    BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
+
+            // デバッグ用
             System.out.println("入力に誤りがあります");
+
+            // main.html（トップ画面）を出力
             return new ModelAndView("main");
         }
 
-        List<Item> list = repository.findAll();
+        // データベースに登録したすべての商品を表示
+        List<Item> list = dao.getAll();
 
+        // リスト内がnullもしくは空だった場合
         if (list == null || list.isEmpty()) {
+
+            // main.htmlを表示
             ModelAndView res = new ModelAndView("main");
+
+            // msgへ結果の文字列を挿入
             res.addObject("msg", "データが見つかりませんでした");
+            // デバッグ用
             System.out.println("データが見つかりませんでした");
+
             return res;
         }
-
+        /* 登録内容が存在した場合、findresult.htmlへ飛ぶことができる */
+        // findresult.html
         ModelAndView res = new ModelAndView("findresult");
+
+        // msgへ結果の文字列を挿入
         res.addObject("msg", "検索するデータを選択してください");
+
+        // リストの中身をすべて出力
         res.addObject("items", list);
+
+        // デバッグ用
         System.out.println("削除確認" + res);
+
         return res;
     }
 
     @RequestMapping(value = "/findresult", method = RequestMethod.POST)
     public ModelAndView searchItems(HttpServletRequest request,
                                     ModelAndView mav) {
+        // findresult.htmlをセット
         mav.setViewName("findresult");
-
+        
+        // リクエストパラメーター
         String param = request.getParameter("find_str");
-
+        
+        // リクエストパラメーターが空の場合
         if (param == null || param.isEmpty()) {
+            // メッセージに出力
             mav.addObject("msg", "検索する値を入力してください");
+
+            // findresult.htmlへリダイレクト
             return new ModelAndView("redirect:/findresult");
+
         }
 
         mav.addObject("title", "在庫リストの検索結果");
+
         mav.addObject("msg", "[" + param + "]の検索結果は・・・");
+
         mav.addObject("items", dao.find(param));
+
         return mav;
     }
 
@@ -146,15 +181,23 @@ public class ItemController {
 
     @PostMapping("/delete_result/{id}")
     public ModelAndView deleteItem(@PathVariable long id, ModelAndView mav) {
+
         mav.setViewName("delete_result");
+
         mav.addObject("title", "削除しますか？");
 
         if (repository.existsById(id)) {
+
             repository.deleteById(id);
+
             mav.addObject("message", "削除しました");
+
             mav.addObject("data", repository.findAll());
+
         } else {
+
             mav.addObject("message", "データが見つかりませんでした");
+
         }
 
         return mav;
@@ -166,11 +209,15 @@ public class ItemController {
 
     @PostMapping("/sum_result")
     public ModelAndView sumResult(ModelAndView mav) {
+
         mav.setViewName("sum_result");
+
         mav.addObject("title", "合計金額");
 
         long totalPrice = repository.count() > 0 ? dao.totalPrice() : 0;
+
         mav.addObject("totalPrice", totalPrice);
+        
         return mav;
     }
 }

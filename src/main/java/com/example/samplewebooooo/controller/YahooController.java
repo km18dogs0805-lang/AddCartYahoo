@@ -16,8 +16,8 @@ import com.example.samplewebooooo.service.yahooServiseWeb;
 /**
  * YahooController: Yahoo ショッピング API を担当するコントローラー
  *
- * GET  /rakuten          - 検索フォーム表示
- * POST /rakuten/search   - キーワード検索 → 結果表示
+ * GET  /yahoo          - 検索フォーム表示
+ * POST /yahoo/search   - キーワード検索 → 結果表示
  */
 @Controller
 public class YahooController {
@@ -35,9 +35,9 @@ public class YahooController {
     // 検索フォーム表示
     // -------------------------------------------------------
 
-    @RequestMapping(value = "/rakuten", method = RequestMethod.GET)
+    @RequestMapping(value = "/yahoo", method = RequestMethod.GET)
     public ModelAndView searchForm(ModelAndView mav) {
-        mav.setViewName("rakuten");
+        mav.setViewName("yahoo");
         mav.addObject("title", "Yahoo ショッピングで商品を検索する");
         System.out.println("baseUrl: " + baseUrl);
         System.out.println("applicationId: " + applicationId);
@@ -48,10 +48,10 @@ public class YahooController {
     // キーワード検索
     // -------------------------------------------------------
 
-    @RequestMapping(value = "/rakuten/search", method = RequestMethod.POST)
+    @RequestMapping(value = "/yahoo/search", method = RequestMethod.POST)
     public ModelAndView searchItems(@RequestParam String keyword,
                                     ModelAndView mav) {
-        mav.setViewName("rakuten");
+        mav.setViewName("yahoo");
 
         try {
             List<Map<String, String>> items = yWeb.searchItem(keyword);
