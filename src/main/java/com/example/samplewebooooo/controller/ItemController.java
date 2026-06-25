@@ -223,6 +223,11 @@ public class ItemController {
         return mav;
     }
 
+   @RequestMapping("/miss_search")
+   public ModelAndView requestMethodName(ModelAndView mav) {
+        mav.setViewName("miss_search");
+        return mav;
+   }
    
     
 }

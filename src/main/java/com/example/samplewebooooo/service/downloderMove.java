@@ -47,7 +47,7 @@ public class downloderMove {
                 "--merge-output-format", "mp4",
                 //"--extractor-args", "youtube:player_client=android",
                 "--extractor-args", "generic:impersonate",
-                "--download-archive", archivePath,
+                "--rm-cache-dir",
                 "--no-cookies",
                 "-o", outputDir + "/%(title)s.%(ext)s", 
                 url
